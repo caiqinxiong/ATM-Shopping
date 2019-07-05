@@ -13,11 +13,10 @@ class Users(object):
             with open(ss.userInfoFile, "r", encoding="utf-8") as f:
                 users = json.load(f)
                 #print(users)
-                return users
         except:
             print('have no users inof!')
             users = {}
-            return users
+        return users
 
     def setUser(self,users):
         '''重新写入账户信息'''
@@ -29,7 +28,7 @@ class Users(object):
         '''检查用户是否存在'''
         users = self.getUser()
         for userID in users.keys():
-            if username in users[userID]['username']:
+            if username == users[userID]['username']:
                 #print('账户名已存在！')
                 return True
         return False
@@ -99,8 +98,12 @@ class Users(object):
         for i in range (1,4):
             username = input('请输入用户名：')
             if self.checkUser(username):
-                password = input('请输入密码：')
                 userID = self.getUserID(username)
+                users=self.getUser()
+                if users[userID]['isLock']:
+                    print('账户已被冻结，请联系管理员！')
+                    exit(-1)
+                password = input('请输入密码：')
                 if self.checkPassword(userID,password):
                     return userID
                 else:
@@ -120,22 +123,37 @@ class Users(object):
 
     def changePasswd(self,userID):
         '''修改密码'''
-        old_passwd = input('请输入旧密码：')
-        check = self.checkPassword(userID,old_passwd)
-        if check:
-            new_passwd1 = input('请输入新密码：')
-            new_passwd2 = input('请再次确认新密码：')
-            if new_passwd1 != new_passwd2:
-                print('两次输入的密码不一致！')
+        for i in range(1,4):
+            old_passwd = input('请输入旧密码：')
+            # 校验旧密码是否正确
+            check = self.checkPassword(userID,old_passwd)
+            if check:
+                for j in range(1,4):
+                    if j == 3:
+                        print('操作过于频繁')
+                        return False
+                    new_passwd1 = input('请输入新密码：')
+                    if len(new_passwd1) < 8:
+                        print('密码不能少于8位！')
+                        continue
+                    if new_passwd1 == old_passwd:
+                        print('新密码不能和旧密码一样！')
+                        continue
+                    new_passwd2 = input('请再次确认新密码：')
+                    if new_passwd1 != new_passwd2:
+                        print('两次输入的密码不一致！')
+                        continue
+                    else:
+                        users=self.getUser()
+                        users[userID]['password'] = new_passwd1
+                        self.setUser(users)
+                        print('密码修改成功！')
+                        return True
             else:
-                users=self.getUser()
-                users[userID]['password'] = new_passwd1
-                self.setUser(users)
-                print('密码修改成功！')
-                return True
-        else:
-            print('旧密码输入错误！')
+                print('旧密码输入错误！')
+        print('操作过于频繁。')
         return False
+
     def changePhone(self,userID,phone):
         '''修改手机号'''
         users=self.getUser()

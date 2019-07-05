@@ -112,8 +112,8 @@ class ATM(object):
                     print('请输入要转账金额:')
                     money = self.inputMoney()
                     userID2 = u.Users().getUserID(username)
-                    self.transfer(userID,userID2,money)
-                    print('已成功向%s转账%s元！' % (username, money))
+                    if self.transfer(userID,userID2,money):
+                        print('已成功向%s转账%s元！' % (username, money))
                 else:
                     print('账户不存在！')
                 self.turnBack()
@@ -134,6 +134,8 @@ class ATM(object):
 
 if __name__ == '__main__':
     atm = ATM()
+    # 登录验证，通过后返回userID值
     userID = u.Users().userLoggin()
     if userID:
+        print('欢迎登录瑞士银行！！')
         atm.atmOperation(userID)
