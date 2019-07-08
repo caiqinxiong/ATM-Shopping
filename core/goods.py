@@ -28,8 +28,14 @@ class Goods(object):
     def printGoods(self):
         '''打印商品列表'''
         goods = self.getGoods()
+        print(''.center(20,'-'))
+        print('所以商品列表如下：')
+        print(''.center(20,'-'))
+        print('名称\t价格')
+        print(''.center(20,'-'))
         for name,price in goods:
             print(name,"\t",price)
+            print(''.center(20,'-'))
 
     def checkPrice(self,price):
         '''校验输入的价格是否为有效数字'''
@@ -57,6 +63,7 @@ class Goods(object):
         if self.checkPrice(price):
             goods = self.getGoods()
             goods.append([name,int(price)])
+            print('商品\033[32;1m%s\033[0m已上架完成！价格为：\033[32;1m%s\033[0m' % (name,int(price)))
             self.setGoods(goods)
             return True
 
@@ -72,153 +79,100 @@ class Goods(object):
                 if goodName == name:
                     goods.remove([goodName,goodsPrice])
                     #print(goods)
+                    print('商品\033[41;1m%s\033[0m已下架成功！' % name)
                     self.setGoods(goods)
                     return True
-    def goodModify(self):
-        '''修改商品价格'''
-        name = input("请输入要修改商品价格的名称").strip()
+
+    def goodSearch(self):
+        '''商品搜索查询'''
+        name = input().strip()
         if not self.checkName(name):
             print('商品不存在！')
             return False
         else:
             goods = self.getGoods()
             for goodName,goodsPrice in goods:
-                # 获取商品在list中的index值
-                index = goods.index([goodName,goodsPrice])
-                #print(index)
-                print('商品原价格为：')
-                print(name,'\t',goods[index][1])
-                price=input("请要修改商品的价格")
-                if self.checkPrice(price):
-                    if goodName == name:
-                        goods[index][1] = int(price)
-                        self.setGoods(goods)
-                        print('商品价格修改完成！')
-                        print(goods[index][0],"\t",goods[index][1])
-                        return True
+                if name == goodName:
+                    # 获取商品在list中的index值
+                    index = goods.index([goodName,goodsPrice])
+                    #print(index)
+                    print('商品价格为：')
+                    print(name,'\t',goods[index][1])
+                    return (True,goods,index)
 
-"""
-def readGoogs():
-    '''读取商品文件'''
-    try:
-        with open('goodsList.txt','r') as f:
-            goods=f.readlines()
-    except:
-        print("文件未存在！")
-        sys.exit(-1)
-    return goods
+    def goodModify(self):
+        '''修改商品价格'''
+        Flag,goods,index = self.goodSearch()
+        #print(Flag,'\n',goods,"\n",index)
+        price=input("请要修改商品的价格")
+        if self.checkPrice(price):
+            goods[index][1] = int(price)
+            self.setGoods(goods)
+            print('商品价格修改完成！')
+            print(goods[index][0],"\t","\033[32;1m%s\033[0m"  % goods[index][1] )
+            return True
 
-def getGoods():
-    '''获取商品信息'''
-    good_list = []
-    for good in readGoogs():
-        good_list.append(good.split())
+    def turnBack(self):
+        '''返回上级菜单'''
+        print(''.center(15,'*'))
+        print( "1、返回上级")
+        print( "2、退出")
+        print(''.center(15,'*'))
+        while True:
+            choise = input("请选择：")
+            if choise == '1':
+                self.goodManagement()
+            elif choise == '2':
+                print ("谢谢使用！")
+                exit(-1)
+            else:
+                print ("输入有误，请重新输入！")
 
-    return dict(good_list)
+    def goodManagement(self):
+        '''用户选择'''
+        print("请选择操作：")
+        print("1、打印商品列表")
+        print("2、商品上架")
+        print("3、商品下架")
+        print("4、修改商品价格")
+        print("5、商品查询")
+        while True:
+            choice = input().strip()
+            if choice.isdigit():
+                choice = int(choice)
+                if 1 == choice:
+                    # 打印商品列表
+                    self.printGoods()
+                    self.turnBack()
+                    break
+                elif 2 == choice:
+                    # 商品上架
+                    self.goodsShelves()
+                    self.turnBack()
+                    break
+                elif 3 == choice:
+                    # 商品下架
+                    self.goodDelete()
+                    self.turnBack()
+                    break
+                elif 4 == choice:
+                    # 修改商品价格
+                    print("请要修改商品价格的名称：")
+                    self.goodModify()
+                    self.turnBack()
+                    break
+                elif 5 == choice:
+                    # 商品查询
+                    print("请输入要查询商品价格的名称:")
+                    self.goodSearch()
+                    self.turnBack()
+                    break
+                else:
+                    print("输入有误，请重新输入")
+            else:
+                print("请输入有效数字！")
 
-def printGoods():
-    '''打印商品'''
-    print("商品列表如下：")
-    for index,item in enumerate(readGoogs()):
-        print "%s\t%s" % (index+1,item)
 
-
-def goodsShelves():
-    '''商品上架'''
-    name=raw_input("请输入要上架的商品名称")
-    if getGoods().has_key(name):
-        print('上架商品已存在！')
-        sys.exit(-1)
-    price=raw_input("请输入该商品的价格")
-    f = open('goodsList.txt','a')
-    f.write(name + "\t" + price + "\n")
-    print('已经将商品\033[31;1m%s\033[0m上架完成') % name
-    f.flush()
-    f.close()
-    printGoods()
-
-def goodDelete():
-    '''商品下架'''
-    name=raw_input("请输入要下架的商品名称")
-    if getGoods().has_key(name):
-        # 要先对文件读，再覆盖写入
-        goods = readGoogs()
-        with open('goodsList.txt','w') as f_w:
-            for line in goods:
-                # 写入时跳过要下架的商品即可
-                if name in line:
-                    continue
-                f_w.write(line)
-        print('已经将商品\033[31;1m%s\033[0m下架完成') % name
-        printGoods()
-
-    else:
-        print('下架的商品不存在！')
-        sys.exit(-1)
-
-def goodModify():
-    '''修改商品价格'''
-    printGoods()
-    name=raw_input("请输入要修改商品价格的名称")
-    if getGoods().has_key(name):
-        price=raw_input("请输入要修改商品的价格")
-        goods = readGoogs()
-        with open('goodsList.txt','w') as f_w:
-            for line in goods:
-                # 写入时跳过要下架的商品即可
-                if name in line:
-                    f_w.write(name+'\t'+price+'\n')
-                    continue
-                f_w.write(line)
-        printGoods()
-    else:
-        print('修改的商品不存在！')
-        sys.exit(-1)
-
-def goodSearch():
-    '''商品搜索'''
-    name=raw_input("请输入搜索商品名称")
-    if getGoods().has_key(name):
-        for line in readGoogs():
-            if name in line:
-                print("搜索的商品价格为：%s" % line)
-                break
-    else:
-        print('搜索的商品不存在！')
-        sys.exit(-1)
-
-def userChoice():
-    '''用户选择'''
-    print("欢迎登录XXX系统后台，请选择操作")
-    print("1、商品上架")
-    print("2、商品下架")
-    print("3、修改商品价格")
-    print("4、商品查询")
-    print("5、退出")
-    choice = input('请选择：')
-    if choice.isdigit():
-        choice = int(choice)
-        if 1 == choice:
-            goodsShelves()
-        elif 2 == choice:
-            goodDelete()
-        elif 3 == choice:
-            goodModify()
-        elif 4 == choice:
-            goodSearch()
-        elif 5 == choice:
-            print("谢谢使用！")
-            sys.exit(-1)
-        else:
-            print("输入有误，请重新输入")
-            userChoice()
-    else:
-        print("请输入有效数字！")
-        userChoice()
-"""
 if __name__ == '__main__':
     goods = Goods()
-    #goods.goodsShelves()
-    goods.printGoods()
-    #goods.goodDelete()
-    goods.goodModify()
+    goods.goodManagement()
