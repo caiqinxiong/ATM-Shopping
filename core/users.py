@@ -105,13 +105,13 @@ class Users(object):
                     exit(-1)
                 password = input('请输入密码：')
                 if self.checkPassword(userID,password):
-                    return userID
+                    return username,userID
                 else:
                     print('密码错误！')
             else:
                 print('账户不存在！')
         print('操作过于频繁！')
-        return False
+        return False,False
 
     def checkPassword(self,userID,password):
         '''校验密码是否正确'''
@@ -279,9 +279,9 @@ class Users(object):
             else:
                 print('请输入有效数字！')
 
-
-
+def run():
+    users=Users()
+    users.userManagement()
 
 if __name__ == '__main__':
-        users=Users()
-        users.userManagement()
+    run()

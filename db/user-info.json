@@ -4,31 +4,37 @@
 		"password": "123",
 		"phone": "12345678901",
 		"limit": 15000,
-		"isLock": true,
-		"money": 1200000
+		"isLock": false,
+		"money": 1199975
+	},
+	"000002": {
+		"username": "caiqinxiong",
+		"password": "123",
+		"phone": "12453534324",
+		"limit": 15000,
+		"isLock": false,
+		"money": 972000
+	},
+	"000003": {
+		"username": "hulk",
+		"password": "123",
+		"phone": "124343245234",
+		"limit": 15000,
+		"isLock": false
 	},
 	"000004": {
 		"username": "spiderman",
-		"password": "abc",
-		"phone": "1234",
+		"password": "123",
+		"phone": "12412323123",
 		"limit": 15000,
 		"isLock": false,
-		"money": 2000
+		"money": 1000
 	},
-	"000006": {
-		"username": "caiqinxiong",
-		"password": "123",
-		"phone": "1234545",
-		"limit": "100000",
-		"isLock": false,
-		"money": 810000
-	},
-	"000007": {
+	"000005": {
 		"username": "IronMan",
 		"password": "123",
-		"phone": "1243245434545",
+		"phone": "1242134432432",
 		"limit": 15000,
-		"isLock": false,
-		"money": 11000
+		"isLock": false
 	}
 }

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'caiqinxiong_cai'
 
-import sys
 from conf import settings as ss
 import json
 
@@ -29,7 +28,7 @@ class Goods(object):
         '''打印商品列表'''
         goods = self.getGoods()
         print(''.center(20,'-'))
-        print('所以商品列表如下：')
+        print('所有商品列表如下：')
         print(''.center(20,'-'))
         print('名称\t价格')
         print(''.center(20,'-'))
@@ -83,9 +82,8 @@ class Goods(object):
                     self.setGoods(goods)
                     return True
 
-    def goodSearch(self):
+    def goodSearch(self,name):
         '''商品搜索查询'''
-        name = input().strip()
         if not self.checkName(name):
             print('商品不存在！')
             return False
@@ -98,11 +96,11 @@ class Goods(object):
                     #print(index)
                     print('商品价格为：')
                     print(name,'\t',goods[index][1])
-                    return (True,goods,index)
+                    return (goods,index,True)
 
-    def goodModify(self):
+    def goodModify(self,name):
         '''修改商品价格'''
-        Flag,goods,index = self.goodSearch()
+        goods,index,Flag = self.goodSearch(name)
         #print(Flag,'\n',goods,"\n",index)
         price=input("请要修改商品的价格")
         if self.checkPrice(price):
@@ -157,14 +155,14 @@ class Goods(object):
                     break
                 elif 4 == choice:
                     # 修改商品价格
-                    print("请要修改商品价格的名称：")
-                    self.goodModify()
+                    name = input("请要修改商品价格的名称：").strip()
+                    self.goodModify(name)
                     self.turnBack()
                     break
                 elif 5 == choice:
                     # 商品查询
-                    print("请输入要查询商品价格的名称:")
-                    self.goodSearch()
+                    name = input("请输入要查询商品价格的名称:").strip()
+                    self.goodSearch(name)
                     self.turnBack()
                     break
                 else:
@@ -172,7 +170,9 @@ class Goods(object):
             else:
                 print("请输入有效数字！")
 
-
-if __name__ == '__main__':
+def run():
     goods = Goods()
     goods.goodManagement()
+
+if __name__ == '__main__':
+    run()

@@ -24,8 +24,8 @@ class ATM(object):
     def withdrawals(self,userID,money):
         '''取款'''
         users = u.Users().getUser()
-        int(users[userID]['money'])
         try:
+            int(users[userID]['money'])
             if money > users[userID]['money']:
                 print('余额不足！！')
                 return False
@@ -50,9 +50,12 @@ class ATM(object):
     def queryBalance(self,userID):
         '''查询余额'''
         users = u.Users().getUser()
-        print('账户%s的余额为：\n%s元' % (users[userID]['username'],users[userID]['money']))
+        try:
+            print('账户%s的余额为：\n%s元' % (users[userID]['username'],users[userID]['money']))
+        except:
+            print('账户%s的余额为：\n0元' % (users[userID]['username']))
 
-    def turnBack(self):
+    def turnBack(self,userID):
         '''返回上级菜单'''
         print(''.center(15,'*'))
         print( "1、返回上级")
@@ -68,14 +71,14 @@ class ATM(object):
             else:
                 print ("输入有误，请重新输入！")
 
-    def inputMoney(self):
+    def inputMoney(self,userID):
         '''输入金额'''
         money = input()
         if money.isdigit():
             return int(money)
         else:
             print('输入不是有效数字！')
-        return  self.turnBack()
+        return  self.turnBack(userID)
 
     def atmOperation(self,userID):
         '''ATM操作，总入口函数'''
@@ -91,18 +94,18 @@ class ATM(object):
             if '1' == choise:
                 # 存款
                 print('请输入存款金额：')
-                money = self.inputMoney()
+                money = self.inputMoney(userID)
                 self.deposit(userID,money)
                 print('存入%s元成功！' % (money))
-                self.turnBack()
+                self.turnBack(userID)
                 break
             elif '2' == choise:
                 # 取款
                 print('请输入取款金额！')
-                money = self.inputMoney()
-                self.withdrawals(userID,money)
-                print('已取出%s元！请收好！' % (money) )
-                self.turnBack()
+                money = self.inputMoney(userID)
+                if self.withdrawals(userID,money):
+                    print('已取出%s元！请收好！' % (money))
+                self.turnBack(userID)
                 break
             elif '3' == choise:
                 # 转账
@@ -110,32 +113,35 @@ class ATM(object):
                 checkUser =  u.Users().checkUser(username)
                 if checkUser:
                     print('请输入要转账金额:')
-                    money = self.inputMoney()
+                    money = self.inputMoney(userID)
                     userID2 = u.Users().getUserID(username)
                     if self.transfer(userID,userID2,money):
                         print('已成功向%s转账%s元！' % (username, money))
                 else:
                     print('账户不存在！')
-                self.turnBack()
+                self.turnBack(userID)
                 break
             elif '4' == choise:
                 # 查询余额
                 self.queryBalance(userID)
-                self.turnBack()
+                self.turnBack(userID)
                 break
 
             elif '5' == choise:
                 # 修改密码
                 u.Users().changePasswd(userID)
-                self.turnBack()
+                self.turnBack(userID)
                 break
             else:
                 print('输入有误！')
 
-if __name__ == '__main__':
+def run():
     atm = ATM()
+    print('欢迎登录瑞士银行！！')
     # 登录验证，通过后返回userID值
-    userID = u.Users().userLoggin()
+    username,userID = u.Users().userLoggin()
     if userID:
-        print('欢迎登录瑞士银行！！')
         atm.atmOperation(userID)
+
+if __name__ == '__main__':
+    run()
