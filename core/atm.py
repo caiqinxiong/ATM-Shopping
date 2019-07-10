@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'caiqinxiong_cai'
-
+import os,sys
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(BASE_DIR)
 from core import users as u
 
 class ATM(object):

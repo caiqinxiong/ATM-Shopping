@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'caiqinxiong_cai'
-
+import os,sys
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(BASE_DIR)
 from conf import settings as ss
 import json
 

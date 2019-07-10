@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'caiqinxiong_cai'
 
+import os,sys
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(BASE_DIR)
 from conf import settings as ss
 import json
 
@@ -30,10 +33,10 @@ class Goods(object):
         print(''.center(20,'-'))
         print('所有商品列表如下：')
         print(''.center(20,'-'))
-        print('名称\t价格')
+        print('序号\t\t名称\t\t价格')
         print(''.center(20,'-'))
         for name,price in goods:
-            print(name,"\t",price)
+            print(goods.index([name,price]), '\t', name,"\t",price)
             print(''.center(20,'-'))
 
     def checkPrice(self,price):

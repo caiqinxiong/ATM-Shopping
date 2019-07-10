@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'caiqinxiong_cai'
-
+import os,sys
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(BASE_DIR)
 from core import goods as g
 from core import atm as a
 from conf import settings as ss
@@ -43,12 +45,13 @@ class ShoppingCar(object):
         print('总计：\t %s' % sum)
         return sum
 
-    def buyList(self,username,goodName):
+    def buyList(self,username,choice):
         '''请选择购物'''
         buyList = self.getBuyList(username)
-        if g.Goods().checkName(goodName):
-            goods,index,Flag = g.Goods().goodSearch(goodName)
-            buyList.append([goodName,goods[index][1]])
+        goods = g.Goods().getGoods()
+        if choice < len(goods) and choice >=0:
+            print(goods[choice])
+            buyList.append(goods[choice])
             #print(buyList)
             self.setBuyList(username,buyList)
             print('加入购物车成功')
@@ -64,23 +67,30 @@ class ShoppingCar(object):
             print('请选择，停止购物按q')
             choice = input().strip()
             if choice != 'q':
-                self.buyList(username,choice)
+                if choice.isdigit():
+                    choice = int(choice)
+                    self.buyList(username,choice)
+                else:
+                    print('请输入有效数字！')
             else:
                 # 获取购物车总价
                 sum = self.printBuyList(username)
                 print('开始结算！')
                 password = input('请输入银行卡密码：')
-                u.Users().checkPassword(userID,password)
-                # 调用银行卡接口结算
-                if a.ATM().withdrawals(userID,sum):
-                    print('结算成功！')
-                    return True
+                if u.Users().checkPassword(userID,password):
+                    # 调用银行卡接口结算
+                    if a.ATM().withdrawals(userID,sum):
+                        print('结算成功！')
+                        return True
+                    else:
+                        print('结算失败！')
                 else:
-                    print('结算失败！')
-                    # 清空本次购物信息
-                    buyList = []
-                    self.setBuyList(username,buyList)
-                    return False
+                    print('密码错误！')
+
+                # 清空本次购物信息
+                buyList = ['结算失败！']
+                self.setBuyList(username, buyList)
+                return False
 
 
 def run():
