@@ -36,7 +36,7 @@ class ShoppingCar(object):
         print(''.center(20,'-'))
         print('购买商品列表如下：')
         print(''.center(20,'-'))
-        print('名称\t价格')
+        print('名称\t\t价格')
         print(''.center(20,'-'))
         for name,price in buyList:
             print(name,"\t",price)
@@ -76,20 +76,26 @@ class ShoppingCar(object):
                 # 获取购物车总价
                 sum = self.printBuyList(username)
                 print('开始结算！')
-                password = input('请输入银行卡密码：')
-                if u.Users().checkPassword(userID,password):
-                    # 调用银行卡接口结算
-                    if a.ATM().withdrawals(userID,sum):
-                        print('结算成功！')
-                        return True
+                n = 2
+                while n >=0:
+                    password = input('请输入银行卡密码：')
+                    if u.Users().checkPassword(userID,password):
+                        # 调用银行卡接口结算
+                        if a.ATM().withdrawals(userID,sum):
+                            print('结算成功！')
+                            return True
+                        else:
+                            print('结算失败！')
                     else:
-                        print('结算失败！')
-                else:
-                    print('密码错误！')
-
+                        if n !=0:
+                            print('密码错误！你还有%s次尝试机会！' % n)
+                        else:
+                            print('尝试次数已用完,结算失败！')
+                    n -=1
                 # 清空本次购物信息
-                buyList = ['结算失败！']
-                self.setBuyList(username, buyList)
+                #buyList = ['结算失败！']
+                #self.setBuyList(username, buyList)
+                os.remove(ss.ShoppingCarFile(username))
                 return False
 
 
