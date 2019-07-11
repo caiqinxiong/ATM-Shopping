@@ -123,6 +123,7 @@ class Users(object):
         else:
             return False
 
+    @ss.log
     def changePasswd(self,userID):
         '''修改密码'''
         for i in range(1,4):

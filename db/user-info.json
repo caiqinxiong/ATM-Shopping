@@ -5,7 +5,7 @@
 		"phone": "12345678901",
 		"limit": 15000,
 		"isLock": false,
-		"money": 1129975
+		"money": 1149975
 	},
 	"000002": {
 		"username": "caiqinxiong",
@@ -13,7 +13,7 @@
 		"phone": "12453534324",
 		"limit": 15000,
 		"isLock": false,
-		"money": 760900
+		"money": 751700
 	},
 	"000003": {
 		"username": "hulk",

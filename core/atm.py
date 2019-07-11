@@ -24,7 +24,6 @@ class ATM(object):
         #print('账户%s已存入%s元！' % (users[userID]['username'],money) )
         #print('总余额为： %s 元' % users[userID]['money'])
         return True
-
     @ss.log
     def withdrawals(self,userID,money):
         '''取款'''
@@ -43,7 +42,6 @@ class ATM(object):
         #print('账户%s已取出%s元！' % (users[userID]['username'],money) )
         #print('总余额为： %s 元' % users[userID]['money'])
         return True
-
     @ss.log
     def transfer(self,userID1,userID2,money):
         '''转账'''
