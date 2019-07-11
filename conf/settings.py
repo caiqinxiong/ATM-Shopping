@@ -22,9 +22,38 @@ goodsInfoFile = '../db/goods-info.json'
 
 # 用户购物车文件
 def ShoppingCarFile(username,year=timeYear,day=timeDay):
-    dirs = '../db/shoppinCar'
+    dirs = '../db/shoppinCar/%s' % username
     if not os.path.exists(dirs):
         os.makedirs(dirs)
-    shoppingInfoFile = '%s/%s_shopping-info_%s%s.json' % (dirs,username,year,day)
+    shoppingInfoFile = '%s/shopping-info_%s%s.json' % (dirs,year,day)
     #print(shoppingInfoFile)
     return shoppingInfoFile
+
+# 日志文件
+logFile = '../log/atm.log'
+
+# log功能,使用装饰器
+def log(func):
+    def wrapper(*args, **kwargs):
+        f = open(logFile, "a", encoding="utf-8")
+        f.write(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+"\t"+func.__doc__+"\n")
+        f.close()
+        return func(*args, **kwargs)
+    return wrapper
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

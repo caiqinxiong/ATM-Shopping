@@ -4,10 +4,12 @@ import os,sys
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(BASE_DIR)
 from core import users as u
+from conf import settings as ss
 
 class ATM(object):
     '''ATM类'''
 
+    @ss.log
     def deposit(self,userID,money):
         '''存款'''
         # 调用用户类的获取用户信息方法
@@ -23,6 +25,7 @@ class ATM(object):
         #print('总余额为： %s 元' % users[userID]['money'])
         return True
 
+    @ss.log
     def withdrawals(self,userID,money):
         '''取款'''
         users = u.Users().getUser()
@@ -41,6 +44,7 @@ class ATM(object):
         #print('总余额为： %s 元' % users[userID]['money'])
         return True
 
+    @ss.log
     def transfer(self,userID1,userID2,money):
         '''转账'''
         # 直接调用取款、存款函数，取款成功了再存款。
@@ -49,6 +53,7 @@ class ATM(object):
             return True
         return False
 
+    @ss.log
     def queryBalance(self,userID):
         '''查询余额'''
         users = u.Users().getUser()
